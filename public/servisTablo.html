@@ -47,7 +47,7 @@
                 </ul>
             </div>
         </div>
-        <!-- End Sidebar -->
+        <!-- Sidebar Sonu -->
         <div class="main-panel">
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg" color-on-scroll="500">
@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </nav>
-            <!-- End Navbar -->
+            <!-- Navbar Sonu -->
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">
@@ -83,6 +83,7 @@
                             </a>
                         </div>
                     </div>
+                    <!-- Servisler Tablosu -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card strpied-tabled-with-hover">
@@ -106,6 +107,84 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Servisler Tablosu Sonu -->
+                    <!-- Servis Sil -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Servis Sil</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-md-9 pr-1">
+                                                <div class="form-group">
+                                                    <label>Servis Numarası</label>
+                                                    <input id="servisSilId" type="number" class="form-control" placeholder="Id" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button id="servisSilBtn" type="submit" class="btn btn-danger btn-fill pull-right">Servisi Sil</button>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Servis Sil Sonu -->
+                    <!-- Servis Düzenle -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Servis Girişi</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-md-3 pr-1">
+                                                <div class="form-group">
+                                                    <label>Servis Numarası</label>
+                                                    <input id="sId" type="number" class="form-control" placeholder="Id" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 pr-1">
+                                                <div class="form-group">
+                                                    <label>Servis Adı</label>
+                                                    <input id="sAdi" type="text" class="form-control" placeholder="İsim" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Servis Fiyatı</label>
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">₺</span>
+                                                        </div>
+                                                        <input id="sFiyati" type="number" class="form-control" placeholder="Fiyat" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Notlar</label>
+                                                    <textarea id="sNotlar" rows="1" cols="80" class="form-control" placeholder="Gerekli Notlar"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button id="servisDuzenleBtn" type="submit" class="btn btn-success btn-fill pull-right">Servisi Düzenle</button>
+                                        <div class="clearfix"></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Servis Düzenle Sonu -->
                 </div>
             </div>
             <!-- Footer -->
@@ -163,4 +242,52 @@
 
 <script type="text/javascript">
     window.onload = ServisTabloGetir;
+
+    const database = firebase.database();
+    const servisRef = database.ref('servis');
+
+    const servisSilId = document.getElementById('servisSilId');
+    const servisSilBtn = document.getElementById('servisSilBtn');
+
+    servisSilBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        firebase.database().ref('servis').once('value', function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                var childKey = childSnapshot.key;
+                var childData = childSnapshot.val();
+                if(childSnapshot.val().id == servisSilId.value){
+                    servisRef.child(childKey).remove();
+                    console.log('Silme Başarılı!');
+                }
+            });
+        });
+    });
+
+    const sId = document.getElementById('sId');
+    const sAdi = document.getElementById('sAdi');
+    const sFiyati = document.getElementById('sFiyati');
+    const sNotlar = document.getElementById('sNotlar');
+    const servisDuzenleBtn = document.getElementById('servisDuzenleBtn');
+
+    servisDuzenleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const yeniVeri = {
+            id: sId.value,
+            adi: sAdi.value,
+            fiyat: sFiyati.value,
+            notlar: sNotlar.value,
+        }
+
+        firebase.database().ref('servis').once('value', function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                var childKey = childSnapshot.key;
+                var childData = childSnapshot.val();
+                if(childSnapshot.val().id == sId.value){
+                    servisRef.child(childKey).update(yeniVeri);
+                    console.log('Düzenleme Başarılı!');
+                }
+            });
+        });
+    });
 </script>

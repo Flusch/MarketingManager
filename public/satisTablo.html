@@ -47,7 +47,7 @@
                 </ul>
             </div>
         </div>
-        <!-- End Sidebar -->
+        <!-- Sidebar Sonu -->
         <div class="main-panel">
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg" color-on-scroll="500">
@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </nav>
-            <!-- End Navbar -->
+            <!-- Navbar Sonu -->
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">
@@ -82,6 +82,9 @@
                                  Geri Dön
                             </a>
                         </div>
+                    </div>
+                    <!-- Satışlar Tablosu -->
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="card strpied-tabled-with-hover">
                                 <div class="card-header ">
@@ -106,6 +109,34 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Satış Tablosu Sonu -->
+                    <!-- Satış Sil -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Satış Sil</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-md-9 pr-1">
+                                                <div class="form-group">
+                                                    <label>Satış Kodu</label>
+                                                    <input id="satisSilId" type="number" class="form-control" placeholder="Id" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button id="satisSilBtn" type="submit" class="btn btn-danger btn-fill pull-right">Satışı Sil</button>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Satış Sil Sonu -->
                 </div>
             </div>
             <!-- Footer -->
@@ -163,6 +194,26 @@
 
 <script type="text/javascript">
     window.onload = SatisTabloGetir;
+
+    const database = firebase.database();
+    const satisRef = database.ref('satis');
+
+    const satisSilId = document.getElementById('satisSilId');
+    const satisSilBtn = document.getElementById('satisSilBtn');
+
+    satisSilBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        firebase.database().ref('satis').once('value', function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                var childKey = childSnapshot.key;
+                var childData = childSnapshot.val();
+                if(childSnapshot.val().id == satisSilId.value){
+                    satisRef.child(childKey).remove();
+                    console.log('Silme Başarılı!');
+                }
+            });
+        });
+    });
 </script>
 
 </html>

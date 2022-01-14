@@ -47,7 +47,7 @@
                 </ul>
             </div>
         </div>
-        <!-- End Sidebar -->
+        <!-- Sidebar Sonu -->
         <div class="main-panel">
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg" color-on-scroll="500">
@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </nav>
-            <!-- End Navbar -->
+            <!-- Navbar Sonu -->
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">
@@ -82,6 +82,9 @@
                                  Geri Dön
                             </a>
                         </div>
+                    </div>
+                    <!-- Ürünler Tablosu -->
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="card strpied-tabled-with-hover">
                                 <div class="card-header ">
@@ -104,6 +107,84 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Ürünler Tablosu Sonu -->
+                    <!-- Ürün Sil -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Ürün Sil</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-md-9 pr-1">
+                                                <div class="form-group">
+                                                    <label>Müşteri Numarası</label>
+                                                    <input id="urunSilId" type="number" class="form-control" placeholder="Id" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button id="urunSilBtn" type="submit" class="btn btn-danger btn-fill pull-right">Ürünü Sil</button>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Ürün Sil Sonu -->
+                    <!-- Ürün Düzenle -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Ürün Düzenle</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-md-3 pr-1">
+                                                <div class="form-group">
+                                                    <label>Ürün Numarası (Gerekli)</label>
+                                                    <input id="uId" type="number" class="form-control" placeholder="Id" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 pr-1">
+                                                <div class="form-group">
+                                                    <label>Ürün Adı</label>
+                                                    <input id="uAdi" type="text" class="form-control" placeholder="İsim" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Ürün Fiyatı</label>
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">₺</span>
+                                                        </div>
+                                                        <input id="uFiyati" type="number" class="form-control" placeholder="Fiyat" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Notlar</label>
+                                                    <textarea id="uNotlar" rows="1" cols="80" class="form-control" placeholder="Gerekli Notlar"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button id="urunDuzenleBtn" type="submit" class="btn btn-success btn-fill pull-right">Ürünü Düzenle</button>
+                                        <div class="clearfix"></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Ürün Düzenle Sonu -->
                 </div>
             </div>
             <!-- Footer -->
@@ -161,6 +242,54 @@
 
 <script type="text/javascript">
     window.onload = UrunTabloGetir;
+
+    const database = firebase.database();
+    const urunRef = database.ref('urun');
+
+    const urunSilBtn = document.getElementById('urunSilBtn');
+    const urunSilId = document.getElementById('urunSilId');
+
+    urunSilBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        firebase.database().ref('urun').once('value', function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                var childKey = childSnapshot.key;
+                var childData = childSnapshot.val();
+                if(childSnapshot.val().id == urunSilId.value){
+                    urunRef.child(childKey).remove();
+                    console.log('Silme Başarılı!');
+                }
+            });
+        });
+    });
+
+    const uId = document.getElementById('uId');
+    const uAdi = document.getElementById('uAdi');
+    const uFiyati = document.getElementById('uFiyati');
+    const uNotlar = document.getElementById('uNotlar');
+    const urunDuzenleBtn = document.getElementById('urunDuzenleBtn');
+
+    urunDuzenleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const yeniVeri = {
+            id: uId.value,
+            adi: uAdi.value,
+            fiyat: uFiyati.value,
+            notlar: uNotlar.value,
+        }
+
+        firebase.database().ref('urun').once('value', function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                var childKey = childSnapshot.key;
+                var childData = childSnapshot.val();
+                if(childSnapshot.val().id == uId.value){
+                    urunRef.child(childKey).update(yeniVeri);
+                    console.log('Düzenleme Başarılı!');
+                }
+            });
+        });
+    });
 </script>
 
 </html>

@@ -267,48 +267,25 @@
         e.preventDefault();
         firebase.database().ref('musteri').once('value', function(snapshot){
             snapshot.forEach(function(childSnapshot){
-                    var childKey = childSnapshot.key;
-                    var childData = childSnapshot.val();
-                    if(childSnapshot.val().id == musteriSilId.value){
-                        musteriRef.child(childKey).remove();
-                        console.log('Silme Başarılı!');
-                    }
+                var childKey = childSnapshot.key;
+                var childData = childSnapshot.val();
+                if(childSnapshot.val().id == musteriSilId.value){
+                    musteriRef.child(childKey).remove();
+                    console.log('Silme Başarılı!');
+                }
             });
         });
     });
 
     const musteriDuzenleBtn = document.getElementById('musteriDuzenleBtn');
+    const mId = document.getElementById('mId');
+    const mAdi = document.getElementById('mAdi');
+    const mTip = document.getElementById('mTip');
+    const mAdres = document.getElementById('mAdres');
+    const mNotlar = document.getElementById('mNotlar');
 
     musteriDuzenleBtn.addEventListener('click', (e) => {
         e.preventDefault();
-
-        const mId = document.getElementById('mId');
-        
-        firebase.database().ref('musteri').once('value', function(snapshot){
-            snapshot.forEach(
-                function(childSnapshot){
-                    if(childSnapshot.val().id == mId.value){
-                        const mAdi = childSnapshot.val().adi;
-                        const mTip = childSnapshot.val().tip;
-                        const mAdres = childSnapshot.val().adres;
-                        const mNotlar = childSnapshot.val().notlar;
-                        console.log('Düzenleme Başarılı!');
-                        console.log(mId.value);
-                        console.log(childSnapshot.val().id);
-                        console.log(mAdi.value);
-                        console.log(mTip.value);
-                        console.log(mAdres.value);
-                        console.log(mNotlar.value);
-                    }
-                }
-            );
-        });
-
-        if(!document.getElementById('mAdi') == ""){const mAdi = document.getElementById('mAdi');}
-        if(!document.getElementById('mTip') == ""){const mTip = document.getElementById('mTip');}
-        if(!document.getElementById('mNotlar') == ""){const mAdres = document.getElementById('mAdres');}
-        if(!document.getElementById('mNotlar') == ""){const mNotlar = document.getElementById('mNotlar');}
-
         const yeniVeri = {
             adi: mAdi.value,
             tip: mTip.value,
@@ -318,12 +295,12 @@
 
         firebase.database().ref('musteri').once('value', function(snapshot){
             snapshot.forEach(function(childSnapshot){
-                    var childKey = childSnapshot.key;
-                    var childData = childSnapshot.val();
-                    if(childSnapshot.val().id == mId.value){
-                        musteriRef.child(childKey).update(yeniVeri);
-                        console.log('Düzenleme Başarılı!');
-                    }
+                var childKey = childSnapshot.key;
+                var childData = childSnapshot.val();
+                if(childSnapshot.val().id == mId.value){
+                    musteriRef.child(childKey).update(yeniVeri);
+                    console.log('Düzenleme Başarılı!');
+                }
             });
         });
     });
